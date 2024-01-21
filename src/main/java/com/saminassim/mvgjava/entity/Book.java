@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "books")
 @Getter
@@ -22,8 +24,9 @@ public class Book {
     private String imageUrl;
     private Integer year;
     private String genre;
-    @OneToOne
-    private BookRating rating;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id")
+    private List<BookRating> rating;
     private Integer averageRating;
 
 }

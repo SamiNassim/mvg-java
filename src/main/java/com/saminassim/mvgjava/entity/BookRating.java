@@ -1,9 +1,6 @@
 package com.saminassim.mvgjava.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
@@ -20,9 +17,13 @@ import lombok.Setter;
 public class BookRating {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
-    private String userId;
+    @OneToOne
+    private Book book;
+    @OneToOne
+    private User user;
     @Min(0)
     @Max(5)
-    private String grade;
+    private Integer grade;
 }
