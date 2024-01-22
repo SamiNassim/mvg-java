@@ -26,7 +26,7 @@ public class Book {
     private String genre;
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "id")
-    private List<BookRating> rating;
+    private List<BookRating> ratings;
     private Integer averageRating;
 
 }
