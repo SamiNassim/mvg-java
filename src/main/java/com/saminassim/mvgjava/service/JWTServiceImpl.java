@@ -20,7 +20,7 @@ public class JWTServiceImpl implements JWTService {
         return Jwts.builder().setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1080 * 60 * 24))
-                .signWith(getSigninKey(), SignatureAlgorithm.HS256)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -28,7 +28,7 @@ public class JWTServiceImpl implements JWTService {
         return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 684_800_000))
-                .signWith(getSigninKey(), SignatureAlgorithm.HS256)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -36,7 +36,7 @@ public class JWTServiceImpl implements JWTService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    private Key getSigninKey() {
+    private Key getSigningKey() {
         byte[] key = Decoders.BASE64.decode("uUuhlY89HiD32g/cgBPuktnsyDajgGc/ttJYUxQzkL8=");
         return Keys.hmacShaKeyFor(key);
     }
@@ -47,7 +47,7 @@ public class JWTServiceImpl implements JWTService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder().setSigningKey(getSigninKey()).build().parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
