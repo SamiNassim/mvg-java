@@ -2,6 +2,7 @@ package com.saminassim.mvgjava.controller;
 
 import com.saminassim.mvgjava.dto.BookRequest;
 import com.saminassim.mvgjava.entity.Book;
+import com.saminassim.mvgjava.exception.BookCannotBeDeletedException;
 import com.saminassim.mvgjava.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -40,10 +41,17 @@ public class BookController {
         return bookService.getOneBook(id);
     }
 
-    @DeleteMapping("/:id")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('USER')")
-    public Boolean deleteBook(Long id) {
-        return bookService.deleteBook(id);
+    public ResponseEntity<?> deleteBook(@PathVariable Long id) {
+        try {
+            bookService.deleteBook(id);
+            return ResponseEntity.ok().build();
+        } catch (BookCannotBeDeletedException e) {
+            return ResponseEntity.status(403)
+                    .body(e.getMessage());
+        }
+
     }
 
 

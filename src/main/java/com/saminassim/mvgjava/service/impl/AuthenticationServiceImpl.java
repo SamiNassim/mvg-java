@@ -1,4 +1,4 @@
-package com.saminassim.mvgjava.service;
+package com.saminassim.mvgjava.service.impl;
 
 import com.saminassim.mvgjava.dto.JwtAuthenticationResponse;
 import com.saminassim.mvgjava.dto.LoginRequest;
@@ -7,6 +7,8 @@ import com.saminassim.mvgjava.entity.Role;
 import com.saminassim.mvgjava.entity.User;
 import com.saminassim.mvgjava.exception.UserAlreadyExistsException;
 import com.saminassim.mvgjava.repository.UserRepository;
+import com.saminassim.mvgjava.service.AuthenticationService;
+import com.saminassim.mvgjava.service.JWTService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

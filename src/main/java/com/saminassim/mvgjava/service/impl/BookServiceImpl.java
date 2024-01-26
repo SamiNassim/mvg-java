@@ -1,9 +1,11 @@
-package com.saminassim.mvgjava.service;
+package com.saminassim.mvgjava.service.impl;
 
 import com.saminassim.mvgjava.dto.BookRequest;
 import com.saminassim.mvgjava.entity.Book;
+import com.saminassim.mvgjava.exception.BookCannotBeDeletedException;
 import com.saminassim.mvgjava.repository.BookRepository;
 import com.saminassim.mvgjava.repository.UserRepository;
+import com.saminassim.mvgjava.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,7 +61,17 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findTop3BooksByOrderByAverageRatingDesc();
     }
 
-    public Boolean deleteBook(Long bookId) {
-        return bookRepository.deleteBookById(bookId);
+    public void deleteBook(Long bookId) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long currentUserId = Objects.requireNonNull(userRepository.findByEmail(authentication.getName()).orElse(null)).getId();
+        Optional<Book> selectedBook = bookRepository.findById(bookId);
+        if(!currentUserId.equals(selectedBook.orElseThrow().getUserId())) {
+            throw new BookCannotBeDeletedException("Vous ne pouvez pas supprimer ce livre.");
+        }
+        bookRepository.deleteBookById(bookId);
     }
+
+
+
 }

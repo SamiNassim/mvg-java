@@ -1,6 +1,7 @@
-package com.saminassim.mvgjava.service;
+package com.saminassim.mvgjava.service.impl;
 
 import com.saminassim.mvgjava.repository.UserRepository;
+import com.saminassim.mvgjava.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

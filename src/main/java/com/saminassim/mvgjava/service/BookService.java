@@ -13,5 +13,6 @@ public interface BookService {
     List<Book> getAllBooks();
     Optional<Book> getOneBook(Long bookId);
     List<Book> getBestRating();
-    Boolean deleteBook(Long bookId);
+    void deleteBook(Long bookId);
+
 }

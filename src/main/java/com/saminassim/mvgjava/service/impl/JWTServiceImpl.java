@@ -1,5 +1,6 @@
-package com.saminassim.mvgjava.service;
+package com.saminassim.mvgjava.service.impl;
 
+import com.saminassim.mvgjava.service.JWTService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
