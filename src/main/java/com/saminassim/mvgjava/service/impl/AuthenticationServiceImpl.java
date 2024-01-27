@@ -2,6 +2,7 @@ package com.saminassim.mvgjava.service.impl;
 
 import com.saminassim.mvgjava.dto.JwtAuthenticationResponse;
 import com.saminassim.mvgjava.dto.LoginRequest;
+import com.saminassim.mvgjava.dto.RefreshTokenRequest;
 import com.saminassim.mvgjava.dto.SignupRequest;
 import com.saminassim.mvgjava.entity.Role;
 import com.saminassim.mvgjava.entity.User;
@@ -55,5 +56,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         return jwtAuthenticationResponse;
 
+    }
+
+    public JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest){
+        String userEmail = jwtService.extractUsername(refreshTokenRequest.getToken());
+        User user = userRepository.findByEmail(userEmail).orElseThrow();
+
+        if(jwtService.isTokenValid(refreshTokenRequest.getToken(), user)) {
+            var jwt = jwtService.generateToken(user);
+
+            JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
+
+            jwtAuthenticationResponse.setToken(jwt);
+            jwtAuthenticationResponse.setRefreshToken(refreshTokenRequest.getToken());
+
+            return jwtAuthenticationResponse;
+        }
+        return null;
     }
 }

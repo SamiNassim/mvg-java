@@ -2,6 +2,7 @@ package com.saminassim.mvgjava.controller;
 
 import com.saminassim.mvgjava.dto.JwtAuthenticationResponse;
 import com.saminassim.mvgjava.dto.LoginRequest;
+import com.saminassim.mvgjava.dto.RefreshTokenRequest;
 import com.saminassim.mvgjava.dto.SignupRequest;
 import com.saminassim.mvgjava.exception.UserAlreadyExistsException;
 import com.saminassim.mvgjava.service.AuthenticationService;
@@ -33,5 +34,10 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<JwtAuthenticationResponse> login(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(authenticationService.login(loginRequest));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<JwtAuthenticationResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest) {
+        return ResponseEntity.ok(authenticationService.refreshToken(refreshTokenRequest));
     }
 }
