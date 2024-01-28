@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "books")
@@ -16,16 +17,15 @@ import java.util.List;
 @AllArgsConstructor
 public class Book {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     private Long userId;
     private String title;
     private String author;
     private String imageUrl;
     private Integer year;
     private String genre;
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "book")
     private List<BookRating> ratings;
     private Integer averageRating;
 

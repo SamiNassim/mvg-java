@@ -6,13 +6,14 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface BookService {
 
     ResponseEntity<String> createBook(BookRequest bookRequest);
     List<Book> getAllBooks();
-    Optional<Book> getOneBook(Long bookId);
+    Optional<Book> getOneBook(UUID bookId);
     List<Book> getBestRating();
-    void deleteBook(Long bookId);
-
+    void deleteBook(UUID bookId);
+    Book createRating(UUID bookId, Integer grade);
 }

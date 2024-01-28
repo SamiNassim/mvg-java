@@ -12,5 +12,5 @@ public class BookRequest {
     private String imageUrl;
     private Integer year;
     private String genre;
-
+    private Integer creatorRating;
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/books")
@@ -37,13 +38,13 @@ public class BookController {
     }
 
     @GetMapping("/:id")
-    public Optional<Book> getOneBook(Long id) {
+    public Optional<Book> getOneBook(UUID id) {
         return bookService.getOneBook(id);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<?> deleteBook(@PathVariable Long id) {
+    public ResponseEntity<?> deleteBook(@PathVariable UUID id) {
         try {
             bookService.deleteBook(id);
             return ResponseEntity.ok().build();

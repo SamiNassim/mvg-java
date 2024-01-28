@@ -14,15 +14,14 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "books_ratings")
 public class BookRating {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
-    @OneToOne
+    @ManyToOne
     private Book book;
-    @OneToOne
-    private User user;
+    private Long userId;
     @Min(0)
     @Max(5)
     private Integer grade;
