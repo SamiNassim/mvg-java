@@ -1,7 +1,9 @@
 package com.saminassim.mvgjava.controller;
 
+import com.saminassim.mvgjava.dto.BookRatingRequest;
 import com.saminassim.mvgjava.dto.BookRequest;
 import com.saminassim.mvgjava.entity.Book;
+import com.saminassim.mvgjava.exception.BookAlreadyRatedException;
 import com.saminassim.mvgjava.exception.BookCannotBeDeletedException;
 import com.saminassim.mvgjava.service.BookService;
 import lombok.RequiredArgsConstructor;
@@ -37,8 +39,8 @@ public class BookController {
         return bookService.getBestRating();
     }
 
-    @GetMapping("/:id")
-    public Optional<Book> getOneBook(UUID id) {
+    @GetMapping("/{id}")
+    public Optional<Book> getOneBook(@PathVariable UUID id) {
         return bookService.getOneBook(id);
     }
 
@@ -53,6 +55,18 @@ public class BookController {
                     .body(e.getMessage());
         }
 
+    }
+
+    @PostMapping("/{id}/rating")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<?> createRating(@PathVariable UUID id, @RequestBody BookRatingRequest bookRatingRequest) {
+        try {
+            bookService.createRating(id, bookRatingRequest);
+            return ResponseEntity.ok().build();
+        } catch (BookAlreadyRatedException e) {
+            return ResponseEntity.status(401)
+                    .body(e.getMessage());
+        }
     }
 
 

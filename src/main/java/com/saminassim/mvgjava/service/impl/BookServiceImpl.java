@@ -1,5 +1,6 @@
 package com.saminassim.mvgjava.service.impl;
 
+import com.saminassim.mvgjava.dto.BookRatingRequest;
 import com.saminassim.mvgjava.dto.BookRequest;
 import com.saminassim.mvgjava.entity.Book;
 import com.saminassim.mvgjava.entity.BookRating;
@@ -85,7 +86,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book createRating(UUID bookId, Integer grade) {
+    public Book createRating(UUID bookId, BookRatingRequest bookRatingRequest) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long currentUserId = Objects.requireNonNull(userRepository.findByEmail(authentication.getName()).orElse(null)).getId();
@@ -101,7 +102,7 @@ public class BookServiceImpl implements BookService {
         BookRating newRating = new BookRating();
         newRating.setUserId(currentUserId);
         newRating.setBook(selectedBook.orElseThrow());
-        newRating.setGrade(grade);
+        newRating.setGrade(bookRatingRequest.getRating());
 
         bookRatingRepository.save(newRating);
 
