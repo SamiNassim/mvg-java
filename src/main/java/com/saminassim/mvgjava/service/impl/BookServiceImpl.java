@@ -2,10 +2,12 @@ package com.saminassim.mvgjava.service.impl;
 
 import com.saminassim.mvgjava.dto.BookRatingRequest;
 import com.saminassim.mvgjava.dto.BookRequest;
+import com.saminassim.mvgjava.dto.ModifyBookRequest;
 import com.saminassim.mvgjava.entity.Book;
 import com.saminassim.mvgjava.entity.BookRating;
 import com.saminassim.mvgjava.exception.BookAlreadyRatedException;
 import com.saminassim.mvgjava.exception.BookCannotBeDeletedException;
+import com.saminassim.mvgjava.exception.BookCannotBeModifiedException;
 import com.saminassim.mvgjava.repository.BookRatingRepository;
 import com.saminassim.mvgjava.repository.BookRepository;
 import com.saminassim.mvgjava.repository.UserRepository;
@@ -73,6 +75,29 @@ public class BookServiceImpl implements BookService {
     public List<Book> getBestRating() {
         return bookRepository.findTop3BooksByOrderByAverageRatingDesc();
     }
+
+    @Override
+    public Book modifyBook(UUID bookId, ModifyBookRequest modifyBookRequest) {
+
+        Optional<Book> selectedBook = bookRepository.findById(bookId);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long currentUserId = Objects.requireNonNull(userRepository.findByEmail(authentication.getName()).orElse(null)).getId();
+
+        if(!currentUserId.equals(selectedBook.orElseThrow().getUserId())) {
+            throw new BookCannotBeModifiedException("Vous ne pouvez pas modifier ce livre.");
+        }
+
+        selectedBook.orElseThrow().setTitle(modifyBookRequest.getTitle());
+        selectedBook.orElseThrow().setAuthor(modifyBookRequest.getAuthor());
+        selectedBook.orElseThrow().setImageUrl(modifyBookRequest.getImageUrl());
+        selectedBook.orElseThrow().setYear(modifyBookRequest.getYear());
+        selectedBook.orElseThrow().setGenre(modifyBookRequest.getGenre());
+
+        return bookRepository.save(selectedBook.orElseThrow());
+
+    }
+
 
     public void deleteBook(UUID bookId) {
 

@@ -2,6 +2,7 @@ package com.saminassim.mvgjava.service;
 
 import com.saminassim.mvgjava.dto.BookRatingRequest;
 import com.saminassim.mvgjava.dto.BookRequest;
+import com.saminassim.mvgjava.dto.ModifyBookRequest;
 import com.saminassim.mvgjava.entity.Book;
 import org.springframework.http.ResponseEntity;
 
@@ -15,6 +16,7 @@ public interface BookService {
     List<Book> getAllBooks();
     Optional<Book> getOneBook(UUID bookId);
     List<Book> getBestRating();
+    Book modifyBook(UUID bookId, ModifyBookRequest modifyBookRequest);
     void deleteBook(UUID bookId);
     Book createRating(UUID bookId, BookRatingRequest rating);
 }
