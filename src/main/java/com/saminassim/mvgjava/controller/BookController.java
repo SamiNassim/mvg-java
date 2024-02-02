@@ -27,7 +27,7 @@ public class BookController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<String> createBook(@RequestBody BookRequest bookRequest) {
+    public ResponseEntity<String> createBook(@ModelAttribute BookRequest bookRequest) {
         return bookService.createBook(bookRequest);
     }
 

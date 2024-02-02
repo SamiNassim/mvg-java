@@ -12,6 +12,7 @@ import com.saminassim.mvgjava.repository.BookRatingRepository;
 import com.saminassim.mvgjava.repository.BookRepository;
 import com.saminassim.mvgjava.repository.UserRepository;
 import com.saminassim.mvgjava.service.BookService;
+import com.saminassim.mvgjava.service.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,7 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final UserRepository userRepository;
     private final BookRatingRepository bookRatingRepository;
+    private final StorageService storageService;
 
     @Override
     public ResponseEntity<String> createBook(BookRequest bookRequest) {
@@ -38,13 +40,14 @@ public class BookServiceImpl implements BookService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long currentUserId = Objects.requireNonNull(userRepository.findByEmail(authentication.getName()).orElse(null)).getId();
 
+        storageService.store(bookRequest.getImage());
 
         Book newBook = new Book();
         BookRating newBookRating = new BookRating();
 
         newBook.setTitle(bookRequest.getTitle());
         newBook.setAuthor(bookRequest.getAuthor());
-        newBook.setImageUrl(bookRequest.getImageUrl());
+        newBook.setImageUrl("http://localhost:8080/images/" + bookRequest.getImage().getOriginalFilename());
         newBook.setYear(bookRequest.getYear());
         newBook.setGenre(bookRequest.getGenre());
         newBook.setUserId(currentUserId);

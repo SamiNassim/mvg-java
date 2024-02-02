@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -90,5 +91,10 @@ public class StorageServiceImpl implements StorageService {
         catch (MalformedURLException e) {
             throw new StorageFileNotFoundException("Could not read file: " + filename, e);
         }
+    }
+
+    @Override
+    public void deleteAll() {
+        FileSystemUtils.deleteRecursively(rootLocation.toFile());
     }
 }

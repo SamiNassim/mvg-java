@@ -2,6 +2,7 @@ package com.saminassim.mvgjava.dto;
 
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @AllArgsConstructor
@@ -9,7 +10,7 @@ import lombok.*;
 public class BookRequest {
     private String title;
     private String author;
-    private String imageUrl;
+    private MultipartFile image;
     private Integer year;
     private String genre;
     private Integer creatorRating;
