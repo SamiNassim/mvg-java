@@ -91,9 +91,15 @@ public class BookServiceImpl implements BookService {
             throw new BookCannotBeModifiedException("Vous ne pouvez pas modifier ce livre.");
         }
 
+        if(!modifyBookRequest.getImage().isEmpty()){
+            String oldFilename = selectedBook.orElseThrow().getImageUrl().substring(29);
+            storageService.store(modifyBookRequest.getImage());
+            selectedBook.orElseThrow().setImageUrl("http://localhost:8080/images/" + modifyBookRequest.getImage().getOriginalFilename());
+            storageService.deleteFile(oldFilename);
+        }
+
         selectedBook.orElseThrow().setTitle(modifyBookRequest.getTitle());
         selectedBook.orElseThrow().setAuthor(modifyBookRequest.getAuthor());
-        selectedBook.orElseThrow().setImageUrl(modifyBookRequest.getImageUrl());
         selectedBook.orElseThrow().setYear(modifyBookRequest.getYear());
         selectedBook.orElseThrow().setGenre(modifyBookRequest.getGenre());
 

@@ -1,12 +1,13 @@
 package com.saminassim.mvgjava.dto;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class ModifyBookRequest {
     private String title;
     private String author;
-    private String imageUrl;
+    private MultipartFile image;
     private Integer year;
     private String genre;
 }

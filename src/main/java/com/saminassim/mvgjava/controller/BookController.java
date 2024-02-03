@@ -48,7 +48,7 @@ public class BookController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<?> modifyBook(@PathVariable UUID id, @RequestBody ModifyBookRequest modifyBookRequest) {
+    public ResponseEntity<?> modifyBook(@PathVariable UUID id, @ModelAttribute ModifyBookRequest modifyBookRequest) {
         try {
             bookService.modifyBook(id, modifyBookRequest);
             return ResponseEntity.ok().build();
