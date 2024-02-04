@@ -116,6 +116,8 @@ public class BookServiceImpl implements BookService {
         if(!currentUserId.equals(selectedBook.orElseThrow().getUserId())) {
             throw new BookCannotBeDeletedException("Vous ne pouvez pas supprimer ce livre.");
         }
+        String imageNameToDelete = selectedBook.orElseThrow().getImageUrl().substring(29);
+        storageService.deleteFile(imageNameToDelete);
         bookRepository.deleteBookById(bookId);
     }
 
