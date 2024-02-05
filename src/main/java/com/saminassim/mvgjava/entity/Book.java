@@ -1,5 +1,6 @@
 package com.saminassim.mvgjava.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,6 +27,7 @@ public class Book {
     private Integer year;
     private String genre;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "book")
+    @JsonIgnore
     private List<BookRating> ratings;
     private Integer averageRating;
 

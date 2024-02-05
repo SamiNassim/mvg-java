@@ -9,15 +9,18 @@ import com.saminassim.mvgjava.exception.BookCannotBeDeletedException;
 import com.saminassim.mvgjava.exception.BookCannotBeModifiedException;
 import com.saminassim.mvgjava.service.BookService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/books")
 @RequiredArgsConstructor
 public class BookController {
@@ -25,10 +28,10 @@ public class BookController {
     private final BookService bookService;
 
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<String> createBook(@ModelAttribute BookRequest bookRequest) {
-        return bookService.createBook(bookRequest);
+    public ResponseEntity<String> createBook(@RequestPart("book") BookRequest bookRequest, @RequestPart("image") MultipartFile image) {
+        return bookService.createBook(bookRequest, image);
     }
 
     @GetMapping

@@ -13,5 +13,5 @@ public class BookRequest {
     private MultipartFile image;
     private Integer year;
     private String genre;
-    private Integer creatorRating;
+    private Integer rating;
 }

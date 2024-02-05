@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
@@ -35,27 +36,27 @@ public class BookServiceImpl implements BookService {
     private final StorageService storageService;
 
     @Override
-    public ResponseEntity<String> createBook(BookRequest bookRequest) {
+    public ResponseEntity<String> createBook(BookRequest bookRequest, MultipartFile image) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long currentUserId = Objects.requireNonNull(userRepository.findByEmail(authentication.getName()).orElse(null)).getId();
 
-        storageService.store(bookRequest.getImage());
+        storageService.store(image);
 
         Book newBook = new Book();
         BookRating newBookRating = new BookRating();
 
         newBook.setTitle(bookRequest.getTitle());
         newBook.setAuthor(bookRequest.getAuthor());
-        newBook.setImageUrl("http://localhost:8080/images/" + bookRequest.getImage().getOriginalFilename());
+        newBook.setImageUrl("http://localhost:4000/images/" + image.getOriginalFilename());
         newBook.setYear(bookRequest.getYear());
         newBook.setGenre(bookRequest.getGenre());
         newBook.setUserId(currentUserId);
-        newBook.setAverageRating(bookRequest.getCreatorRating());
+        newBook.setAverageRating(bookRequest.getRating());
 
         newBookRating.setBook(newBook);
         newBookRating.setUserId(currentUserId);
-        newBookRating.setGrade(bookRequest.getCreatorRating());
+        newBookRating.setGrade(bookRequest.getRating());
 
         bookRepository.save(newBook);
         bookRatingRepository.save(newBookRating);
@@ -94,7 +95,7 @@ public class BookServiceImpl implements BookService {
         if(!modifyBookRequest.getImage().isEmpty()){
             String oldFilename = selectedBook.orElseThrow().getImageUrl().substring(29);
             storageService.store(modifyBookRequest.getImage());
-            selectedBook.orElseThrow().setImageUrl("http://localhost:8080/images/" + modifyBookRequest.getImage().getOriginalFilename());
+            selectedBook.orElseThrow().setImageUrl("http://localhost:4000/images/" + modifyBookRequest.getImage().getOriginalFilename());
             storageService.deleteFile(oldFilename);
         }
 
