@@ -1,11 +1,11 @@
 package com.saminassim.mvgjava.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.saminassim.mvgjava.dto.BookFrontendRequest;
 import com.saminassim.mvgjava.dto.BookRatingRequest;
-import com.saminassim.mvgjava.dto.BookRequest;
 import com.saminassim.mvgjava.dto.ModifyBookRequest;
 import com.saminassim.mvgjava.entity.Book;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public interface BookService {
 
-    ResponseEntity<String> createBook(BookRequest bookRequest, MultipartFile image);
+    ResponseEntity<String> createBook(BookFrontendRequest bookFrontendRequest) throws JsonProcessingException;
     List<Book> getAllBooks();
     Optional<Book> getOneBook(UUID bookId);
     List<Book> getBestRating();

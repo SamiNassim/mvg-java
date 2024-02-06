@@ -1,5 +1,9 @@
 package com.saminassim.mvgjava.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.saminassim.mvgjava.dto.BookFrontendRequest;
 import com.saminassim.mvgjava.dto.BookRatingRequest;
 import com.saminassim.mvgjava.dto.BookRequest;
 import com.saminassim.mvgjava.dto.ModifyBookRequest;
@@ -19,7 +23,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
@@ -36,19 +39,25 @@ public class BookServiceImpl implements BookService {
     private final StorageService storageService;
 
     @Override
-    public ResponseEntity<String> createBook(BookRequest bookRequest, MultipartFile image) {
+    public ResponseEntity<String> createBook(BookFrontendRequest bookFrontendRequest) throws JsonProcessingException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long currentUserId = Objects.requireNonNull(userRepository.findByEmail(authentication.getName()).orElse(null)).getId();
 
-        storageService.store(image);
+        ObjectMapper objectMapper = new ObjectMapper();
+        BookRequest bookRequest = objectMapper.readValue(bookFrontendRequest.getBook(), BookRequest.class);
+        bookRequest.setImage(bookFrontendRequest.getImage());
+        JsonNode gradeNode = objectMapper.readTree(bookFrontendRequest.getBook());
+        bookRequest.setRating(gradeNode.get("ratings").get(0).get("grade").asInt());
+
+        storageService.store(bookRequest.getImage());
 
         Book newBook = new Book();
         BookRating newBookRating = new BookRating();
 
         newBook.setTitle(bookRequest.getTitle());
         newBook.setAuthor(bookRequest.getAuthor());
-        newBook.setImageUrl("http://localhost:4000/images/" + image.getOriginalFilename());
+        newBook.setImageUrl("http://localhost:4000/images/" + bookRequest.getImage().getOriginalFilename());
         newBook.setYear(bookRequest.getYear());
         newBook.setGenre(bookRequest.getGenre());
         newBook.setUserId(currentUserId);

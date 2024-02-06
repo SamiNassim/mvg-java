@@ -1,7 +1,8 @@
 package com.saminassim.mvgjava.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.saminassim.mvgjava.dto.BookFrontendRequest;
 import com.saminassim.mvgjava.dto.BookRatingRequest;
-import com.saminassim.mvgjava.dto.BookRequest;
 import com.saminassim.mvgjava.dto.ModifyBookRequest;
 import com.saminassim.mvgjava.entity.Book;
 import com.saminassim.mvgjava.exception.BookAlreadyRatedException;
@@ -9,11 +10,9 @@ import com.saminassim.mvgjava.exception.BookCannotBeDeletedException;
 import com.saminassim.mvgjava.exception.BookCannotBeModifiedException;
 import com.saminassim.mvgjava.service.BookService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,10 +27,10 @@ public class BookController {
     private final BookService bookService;
 
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<String> createBook(@RequestPart("book") BookRequest bookRequest, @RequestPart("image") MultipartFile image) {
-        return bookService.createBook(bookRequest, image);
+    public ResponseEntity<String> createBook(@ModelAttribute BookFrontendRequest book) throws JsonProcessingException {
+        return bookService.createBook(book);
     }
 
     @GetMapping
