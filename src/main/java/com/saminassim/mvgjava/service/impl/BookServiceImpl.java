@@ -24,10 +24,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -128,7 +125,7 @@ public class BookServiceImpl implements BookService {
         }
         String imageNameToDelete = selectedBook.orElseThrow().getImageUrl().substring(29);
         storageService.deleteFile(imageNameToDelete);
-        bookRepository.deleteBookById(bookId);
+        bookRepository.deleteBookBy_id(bookId);
     }
 
     @Override

@@ -20,4 +20,5 @@ public interface BookService {
     Book modifyBook(UUID bookId, ModifyBookRequest modifyBookRequest);
     void deleteBook(UUID bookId);
     Book createRating(UUID bookId, BookRatingRequest rating);
+
 }
