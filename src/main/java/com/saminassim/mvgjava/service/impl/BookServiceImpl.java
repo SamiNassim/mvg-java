@@ -39,7 +39,7 @@ public class BookServiceImpl implements BookService {
     public ResponseEntity<String> createBook(BookFrontendRequest bookFrontendRequest) throws JsonProcessingException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long currentUserId = Objects.requireNonNull(userRepository.findByEmail(authentication.getName()).orElse(null)).getId();
+        UUID currentUserId = Objects.requireNonNull(userRepository.findByEmail(authentication.getName()).orElse(null)).getId();
 
         ObjectMapper objectMapper = new ObjectMapper();
         BookRequest bookRequest = objectMapper.readValue(bookFrontendRequest.getBook(), BookRequest.class);
@@ -92,7 +92,7 @@ public class BookServiceImpl implements BookService {
         Optional<Book> selectedBook = bookRepository.findById(bookId);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long currentUserId = Objects.requireNonNull(userRepository.findByEmail(authentication.getName()).orElse(null)).getId();
+        UUID currentUserId = Objects.requireNonNull(userRepository.findByEmail(authentication.getName()).orElse(null)).getId();
 
         if(!currentUserId.equals(selectedBook.orElseThrow().getUserId())) {
             throw new BookCannotBeModifiedException("Vous ne pouvez pas modifier ce livre.");
@@ -118,7 +118,7 @@ public class BookServiceImpl implements BookService {
     public void deleteBook(UUID bookId) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long currentUserId = Objects.requireNonNull(userRepository.findByEmail(authentication.getName()).orElse(null)).getId();
+        UUID currentUserId = Objects.requireNonNull(userRepository.findByEmail(authentication.getName()).orElse(null)).getId();
         Optional<Book> selectedBook = bookRepository.findById(bookId);
         if(!currentUserId.equals(selectedBook.orElseThrow().getUserId())) {
             throw new BookCannotBeDeletedException("Vous ne pouvez pas supprimer ce livre.");
@@ -132,7 +132,7 @@ public class BookServiceImpl implements BookService {
     public Book createRating(UUID bookId, BookRatingRequest bookRatingRequest) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long currentUserId = Objects.requireNonNull(userRepository.findByEmail(authentication.getName()).orElse(null)).getId();
+        UUID currentUserId = Objects.requireNonNull(userRepository.findByEmail(authentication.getName()).orElse(null)).getId();
         Optional<Book> selectedBook = bookRepository.findById(bookId);
 
         // Check if the user has already rated the book

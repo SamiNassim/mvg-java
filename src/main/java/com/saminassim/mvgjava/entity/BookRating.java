@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 
 @Entity
 @Getter
@@ -23,7 +25,7 @@ public class BookRating {
     @JsonIgnore
     @ManyToOne
     private Book book;
-    private Long userId;
+    private UUID userId;
     @Min(0)
     @Max(5)
     private Integer grade;

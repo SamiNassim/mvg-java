@@ -18,7 +18,7 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private UUID _id;
-    private Long userId;
+    private UUID userId;
     private String title;
     private String author;
     private String imageUrl;
