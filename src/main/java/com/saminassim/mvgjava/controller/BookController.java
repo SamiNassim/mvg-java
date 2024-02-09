@@ -3,6 +3,7 @@ package com.saminassim.mvgjava.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.saminassim.mvgjava.dto.BookFrontendRequest;
 import com.saminassim.mvgjava.dto.BookRatingRequest;
+import com.saminassim.mvgjava.dto.ModifyBookFrontendRequest;
 import com.saminassim.mvgjava.dto.ModifyBookRequest;
 import com.saminassim.mvgjava.entity.Book;
 import com.saminassim.mvgjava.exception.BookAlreadyRatedException;
@@ -10,6 +11,7 @@ import com.saminassim.mvgjava.exception.BookCannotBeDeletedException;
 import com.saminassim.mvgjava.exception.BookCannotBeModifiedException;
 import com.saminassim.mvgjava.service.BookService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -48,11 +50,23 @@ public class BookController {
         return bookService.getOneBook(id);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<?> modifyBook(@PathVariable UUID id, @ModelAttribute ModifyBookRequest modifyBookRequest) {
+    public ResponseEntity<?> modifyBook(@RequestBody ModifyBookRequest modifyBookRequest, ModifyBookFrontendRequest modifyBookFrontendRequest, @PathVariable UUID id) throws JsonProcessingException {
         try {
-            bookService.modifyBook(id, modifyBookRequest);
+            bookService.modifyBook(modifyBookFrontendRequest, modifyBookRequest, id);
+            return ResponseEntity.ok().build();
+        } catch (BookCannotBeModifiedException e) {
+            return ResponseEntity.status(401)
+                    .body(e.getMessage());
+        }
+    }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<?> modifyBookImg(@ModelAttribute ModifyBookFrontendRequest modifyBookFrontendRequest, ModifyBookRequest modifyBookRequest, @PathVariable UUID id) throws JsonProcessingException {
+        try {
+            bookService.modifyBook(modifyBookFrontendRequest, modifyBookRequest, id);
             return ResponseEntity.ok().build();
         } catch (BookCannotBeModifiedException e) {
             return ResponseEntity.status(401)

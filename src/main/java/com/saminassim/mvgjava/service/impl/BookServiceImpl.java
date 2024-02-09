@@ -3,10 +3,7 @@ package com.saminassim.mvgjava.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.saminassim.mvgjava.dto.BookFrontendRequest;
-import com.saminassim.mvgjava.dto.BookRatingRequest;
-import com.saminassim.mvgjava.dto.BookRequest;
-import com.saminassim.mvgjava.dto.ModifyBookRequest;
+import com.saminassim.mvgjava.dto.*;
 import com.saminassim.mvgjava.entity.Book;
 import com.saminassim.mvgjava.entity.BookRating;
 import com.saminassim.mvgjava.exception.BookAlreadyRatedException;
@@ -87,7 +84,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book modifyBook(UUID bookId, ModifyBookRequest modifyBookRequest) {
+    public Book modifyBook(ModifyBookFrontendRequest modifyBookFrontendRequest, ModifyBookRequest modifyBookRequest, UUID bookId) throws JsonProcessingException {
 
         Optional<Book> selectedBook = bookRepository.findById(bookId);
 
@@ -98,17 +95,42 @@ public class BookServiceImpl implements BookService {
             throw new BookCannotBeModifiedException("Vous ne pouvez pas modifier ce livre.");
         }
 
-        if(!modifyBookRequest.getImage().isEmpty()){
-            String oldFilename = selectedBook.orElseThrow().getImageUrl().substring(29);
-            storageService.store(modifyBookRequest.getImage());
-            selectedBook.orElseThrow().setImageUrl("http://localhost:4000/images/" + modifyBookRequest.getImage().getOriginalFilename());
-            storageService.deleteFile(oldFilename);
+        if(modifyBookFrontendRequest.getBook() != null){
+            ObjectMapper objectMapper = new ObjectMapper();
+            BookRequest bookRequest = objectMapper.readValue(modifyBookFrontendRequest.getBook(), BookRequest.class);
+
+            selectedBook.orElseThrow().setTitle(bookRequest.getTitle());
+            selectedBook.orElseThrow().setAuthor(bookRequest.getAuthor());
+            selectedBook.orElseThrow().setYear(bookRequest.getYear());
+            selectedBook.orElseThrow().setGenre(bookRequest.getGenre());
         }
 
-        selectedBook.orElseThrow().setTitle(modifyBookRequest.getTitle());
-        selectedBook.orElseThrow().setAuthor(modifyBookRequest.getAuthor());
-        selectedBook.orElseThrow().setYear(modifyBookRequest.getYear());
-        selectedBook.orElseThrow().setGenre(modifyBookRequest.getGenre());
+       if(modifyBookFrontendRequest.getImage() != null){
+            String oldFilename = selectedBook.orElseThrow().getImageUrl().substring(29);
+            storageService.deleteFile(oldFilename);
+            storageService.store(modifyBookFrontendRequest.getImage());
+            selectedBook.orElseThrow().setImageUrl("http://localhost:4000/images/" + modifyBookFrontendRequest.getImage().getOriginalFilename());
+        }
+
+        if(modifyBookRequest.getId() != null) {
+            selectedBook.orElseThrow().set_id(modifyBookRequest.getId());
+        }
+
+        if(modifyBookRequest.getTitle() != null) {
+            selectedBook.orElseThrow().setTitle(modifyBookRequest.getTitle());
+        }
+
+        if(modifyBookRequest.getAuthor() != null) {
+            selectedBook.orElseThrow().setAuthor(modifyBookRequest.getAuthor());
+        }
+
+        if(modifyBookRequest.getYear() != null) {
+            selectedBook.orElseThrow().setYear(modifyBookRequest.getYear());
+        }
+
+        if(modifyBookRequest.getGenre() != null) {
+            selectedBook.orElseThrow().setGenre(modifyBookRequest.getGenre());
+        }
 
         return bookRepository.save(selectedBook.orElseThrow());
 
