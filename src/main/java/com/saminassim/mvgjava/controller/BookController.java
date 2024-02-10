@@ -91,8 +91,7 @@ public class BookController {
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<?> createRating(@PathVariable UUID id, @RequestBody BookRatingRequest bookRatingRequest) {
         try {
-            bookService.createRating(id, bookRatingRequest);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok().body(bookService.createRating(id, bookRatingRequest));
         } catch (BookAlreadyRatedException e) {
             return ResponseEntity.status(401)
                     .body(e.getMessage());

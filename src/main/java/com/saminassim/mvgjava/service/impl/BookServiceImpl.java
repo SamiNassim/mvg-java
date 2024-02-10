@@ -171,13 +171,12 @@ public class BookServiceImpl implements BookService {
 
         bookRatingRepository.save(newRating);
 
-        int allRatings = selectedBook.orElseThrow().getRatings().size();
+        int allRatings = selectedBook.orElseThrow().getRatings().size() + 1;
         Integer sum = 0;
         for(BookRating rating : selectedBook.orElseThrow().getRatings()) {
             sum += rating.getGrade();
         }
-
-        Integer newAverage = Math.toIntExact(Math.round((double) sum / allRatings));
+        Integer newAverage = (int) Math.round((double) sum / allRatings);
 
         selectedBook.orElseThrow().setAverageRating(newAverage);
 
