@@ -25,7 +25,7 @@ MVG :</br>
 MVG-Java :</br>
 <img width="484" alt="Screenshot 2024-02-11 at 04 49 25" src="https://github.com/SamiNassim/mvg-java/assets/125296128/14a8de09-816e-40ab-866f-8df9c0dc0fcc"></br>
 
-Un autre obstacle majeur était d'adapter de traiter certaines requêtes du frontend qui pouvait être différentes selon certains scénarios.</br>
+Un autre obstacle majeur était de traiter certaines requêtes du frontend qui pouvait être différentes selon certains scénarios.</br>
 Dans l'exemple suivant, lorsque l'on modifie un livre sans modifier l'image (uniquement le texte donc), la requête est au format JSON.</br>
 Lorsque l'on modifie l'image, ou le texte + l'image, la requête est au format FormData.</br>
 J'ai essayé plusieurs techniques (@ModelAttribute pour formdata et @RequestBody pour le JSON sur le même controller) mais sans succès.</br>
